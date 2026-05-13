@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dương Dev - App Launchpad</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent: #007aff;
+            --text: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 50px;
+        }
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.3);
+        }
+        #app-search {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 15px 12px 45px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        #app-search:focus {
+            border-color: var(--accent);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.2);
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .app-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        .app-info h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .app-info p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.4;
+        }
+        .tag {
+            font-size: 0.7rem;
+            background: rgba(0, 122, 255, 0.15);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            align-self: flex-start;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            opacity: 0.5;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Dương's Hub</h1>
+        <p style="opacity: 0.6;">Welcome to the control center of all sub-projects.</p>
+    </div>
+
+    <div class="search-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="app-search" placeholder="Search for apps, tools, or projects..." oninput="filterApps()">
+    </div>
+
+    <div class="app-grid" id="app-grid">
+        <!-- MacOS -->
+        <a href="/duongdev/macos" class="app-card" data-name="macos apple system desktop">
+            <div class="app-icon" style="background: linear-gradient(135deg, #2c3e50, #000);"><i class="fab fa-apple"></i></div>
+            <div class="app-info">
+                <span class="tag">System</span>
+                <h3>Dương OS</h3>
+                <p>A fully functional macOS-style web operating system with AI, Safari, and more.</p>
+            </div>
+        </a>
+
+        <!-- Tarot -->
+        <a href="/duongdev/tarot" class="app-card" data-name="tarot ai mystic fortune">
+            <div class="app-icon" style="background: linear-gradient(135deg, #1a0b2e, #9b4dff);"><i class="fas fa-magic"></i></div>
+            <div class="app-info">
+                <span class="tag">AI Tool</span>
+                <h3>Mystic Tarot</h3>
+                <p>AI-powered tarot reading using Claude 4.5 & GPT-4o for deep spiritual insights.</p>
+            </div>
+        </a>
+
+        <!-- Share Blog -->
+        <a href="/duongdev/share" class="app-card" data-name="share blog files storage">
+            <div class="app-icon" style="background: linear-gradient(135deg, #0072ff, #00c6ff);"><i class="fas fa-cloud-upload-alt"></i></div>
+            <div class="app-info">
+                <span class="tag">Utility</span>
+                <h3>Share Blog</h3>
+                <p>Fast and secure file storage and blogging platform for sharing content.</p>
+            </div>
+        </a>
+
+        <!-- That Thach -->
+        <a href="/duongdev/that-thach" class="app-card" data-name="truth or dare game that thach">
+            <div class="app-icon" style="background: linear-gradient(135deg, #ff3b30, #ff9500);"><i class="fas fa-gamepad"></i></div>
+            <div class="app-info">
+                <span class="tag">Game</span>
+                <h3>Thật hay Thách</h3>
+                <p>Interactive party game for friends. Fun, challenging, and engaging.</p>
+            </div>
+        </a>
+
+        <!-- Minh Thy -->
+        <a href="/duongdev/minhthy" class="app-card" data-name="minh thy chat ai bot">
+            <div class="app-icon" style="background: linear-gradient(135deg, #ff9a9e, #fecfef);"><i class="fas fa-robot"></i></div>
+            <div class="app-info">
+                <span class="tag">Beta</span>
+                <h3>Minh Thy AI</h3>
+                <p>Experimental real-time AI assistant for conversational experiences.</p>
+            </div>
+        </a>
+
+        <!-- QPAN -->
+        <a href="/duongdev/qpan" class="app-card" data-name="qpan cybersecurity security education">
+            <div class="app-icon" style="background: linear-gradient(135deg, #34c759, #11998e);"><i class="fas fa-shield-alt"></i></div>
+            <div class="app-info">
+                <span class="tag">Education</span>
+                <h3>An ninh mạng</h3>
+                <p>Educational tool for learning Cybersecurity Laws and National Defense.</p>
+            </div>
+        </a>
+
+        <div id="no-results" class="no-results">No projects found matching your search.</div>
+    </div>
+
+    <script>
+        function filterApps() {
+            const query = document.getElementById('app-search').value.toLowerCase();
+            const cards = document.querySelectorAll('.app-card');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(query)) {
+                    card.style.display = 'flex';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('no-results').style.display = hasResults ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

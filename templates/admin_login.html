@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Cyber Shield</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.*/css/pico.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Admin Control Panel</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <p class="flash-error">{{ messages[0] }}</p>
+            {% endif %}
+        {% endwith %}
+        <form method="post">
+            <input type="password" name="token" placeholder="Enter Admin Secret Token" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

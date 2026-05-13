@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: cyber-shield-server
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: REMOTE_CONFIG_URL
+        value: https://raw.githubusercontent.com/duonggg-10/CyberShield-Server-config/main/config.json
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_SECRET_TOKEN
+        sync: false
+      - key: GOOGLE_API_KEYS
+        sync: false
+      - key: VIRUSTOTAL_API_KEYS
+        sync: false
+      - key: GMAIL_TOKEN_PATH
+        value: secrets/token.json
+      - key: GOOGLE_SHEET_ID
+        sync: false

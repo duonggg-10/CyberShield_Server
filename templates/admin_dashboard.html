@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cyber Shield</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.*/css/pico.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css"> <!-- Example theme -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script> <!-- For C-like languages if needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/shell/shell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/display/autorefresh.min.js"></script> <!-- Optional, for better rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <a href="{{ url_for('admin.logout') }}">Logout</a>
+    </header>
+
+    <div class="container">
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2>System Status</h2>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <h3>CPU</h3>
+                    <p class="value"><span id="cpu-value">--</span>%</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="cpu-progress"></div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <h3>RAM</h3>
+                    <p class="value"><span id="ram-value">--</span>%</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="ram-progress"></div>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <h3>Disk</h3>
+                    <p class="value"><span id="disk-value">--</span>%</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="disk-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Configuration Editor (config.json)</h2>
+            <p>Chỉnh sửa các cài đặt động cho ứng dụng. Thay đổi sẽ có hiệu lực ngay lập tức.</p>
+            <textarea id="config-editor" rows="10"></textarea>
+            <div class="button-container">
+                <button id="save-config-btn">Lưu Config</button>
+            </div>
+            <div id="config-status-message"></div>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <h2>File Editor</h2>
+            <div class="file-editor-layout">
+                <div id="file-browser">
+                    <p>Loading files...</p>
+                </div>
+                <div id="file-content-editor">
+                    <p><strong>Current file:</strong> <span id="current-filepath">No file selected.</span></p>
+                    <textarea id="file-editor" rows="20" placeholder="Select a file from the list to view its content."></textarea>
+                    <div class="button-container">
+                        <button id="save-file-btn">Lưu File</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <h2>Log Viewer (nohup.out)</h2>
+            <div class="button-container" style="text-align: left; margin-bottom: 1rem;">
+                <button id="refresh-log-btn" style="width: auto;">Tải lại Log</button>
+            </div>
+            <pre id="log-content" style="background-color: var(--dark-gray); color: #fff; padding: 1rem; border-radius: var(--border-radius); max-height: 400px; overflow-y: scroll;"></pre>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <h2>Server Actions</h2>
+            <p>Thực hiện các hành động quản trị server quan trọng.</p>
+            <div class="button-container">
+                <button id="restart-server-btn" class="secondary">Khởi động lại Server</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal for Restart -->
+    <dialog id="confirm-restart-modal">
+        <article>
+            <a href="#close" aria-label="Close" class="close" data-target="confirm-restart-modal" onclick="this.closest('dialog').close()"></a>
+            <h3>Xác nhận Khởi động lại Server</h3>
+            <p>Bạn có chắc chắn muốn khởi động lại ứng dụng không? Quá trình này có thể mất vài giây và ngắt kết nối tạm thời.</p>
+            <footer>
+                <a href="#cancel" role="button" class="secondary" data-target="confirm-restart-modal" onclick="this.closest('dialog').close()">Hủy bỏ</a>
+                <a href="#confirm" role="button" class="primary" id="confirm-restart-btn">Xác nhận</a>
+            </footer>
+        </article>
+    </dialog>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>

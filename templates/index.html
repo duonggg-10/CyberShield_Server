@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Shield</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="wrap">
+        <!-- Header -->
+        <div class="hdr">
+            <div class="hdr-left">
+                <div class="logo-box">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <div>
+                    <div class="logo-title">CYBER<span>SHIELD</span></div>
+                    <div class="logo-sub">// AI MESSAGE SENTINEL</div>
+                </div>
+            </div>
+            <div class="hdr-right">
+                <!--<div class="status-pill"><div class="pulse"></div>ONLINE</div> -->
+                <div class="social-btn"><i class="fab fa-facebook-f"></i></div>
+                <div class="social-btn"><i class="fab fa-github"></i></div>
+            </div>
+        </div>
+
+        <!-- Tagline Strip -->
+        <div class="tagline-strip">
+            <div class="scrolling-text">
+                <span>Hệ thống phân tích tin nhắn và phát hiện nguy hiểm bởi AI</span>
+            </div>
+            <span class="competition-tag">Cuộc thi Sáng tạo Thanh thiếu niên Nhi đồng TPHCM 2026</span>
+        </div>
+
+        <!-- Main Interface -->
+        <div class="main">
+            <!-- Left Pane: Input -->
+            <div class="pane">
+                <div class="pane-top">
+                    <div class="pane-title">DỮ LIỆU ĐẦU VÀO</div>
+                    <div class="pane-sub">//: Nhập nội dung cần phân tích.</div>
+                </div>
+                <textarea class="ta" id="ta" placeholder="Khởi tạo luồng dữ liệu... //_" oninput="updateCounter()"></textarea>
+                <div class="counter" id="ctr">0 / 10000</div>
+                
+                <div class="url-input-wrap" style="margin-top: 15px;">
+                    <div class="pane-sub">//: URL đính kèm (tùy chọn).</div>
+                    <input type="text" id="url-ta" class="url-ta" placeholder="http://example.com...">
+                </div>
+            </div>
+
+            <!-- Middle Pane: Controls -->
+            <div class="pane ctrl-pane">
+                <button class="btn-scan" id="scanBtn" onclick="analyze()">
+                    <div class="btn-scan-inner">
+                        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                        <span class="btn-scan-text">PHÂN TÍCH</span>
+                    </div>
+                </button>
+                <div class="divider"></div>
+                <button class="btn-small btn-paste" onclick="pasteText()">
+                    <i class="fas fa-paste"></i> PASTE
+                </button>
+                <button class="btn-small btn-clear" onclick="clearAll()">
+                    <i class="fas fa-trash-alt"></i> CLEAR
+                </button>
+            </div>
+
+            <!-- Right Pane: Analysis -->
+            <div class="pane">
+                <div class="pane-top">
+                    <div class="pane-title">KẾT QUẢ</div>
+                    <div class="pane-sub">//: Kết quả phân tích từ AI.</div>
+                </div>
+                
+                <!-- Idle State -->
+                <div class="result-box" id="r-idle">
+                    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                    <div class="await-text">AWAITING TRANSMISSION...<br>//: Hệ thống sẵn sàng phân tích.</div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="result-box" id="r-loading" style="display:none">
+                    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+                    <div class="await-text">ANALYZING SIGNALS...<br>//: Đang giải mã dữ liệu...</div>
+                </div>
+
+                <!-- Safe State -->
+                <div class="result-box result-safe res-fill" id="r-safe" style="display:none">
+                    <div class="rs safe-c">✓ TÍN HIỆU AN TOÀN</div>
+                    <div class="sbadge bs" id="safe-score">SCORE: 1 / 5</div>
+                    <div class="rlist">
+                        <div><span class="lbl">//:Lý do:</span> <span id="safe-reason"></span></div>
+                        <div><span class="lbl">//:Khuyến cáo:</span> <span id="safe-recommend"></span></div>
+                        <div><span class="lbl">//:Phân loại:</span> <span id="safe-types"></span></div>
+                    </div>
+                </div>
+
+                <!-- Danger State -->
+                <div class="result-box result-danger res-fill" id="r-danger" style="display:none">
+                    <div class="rs danger-c">⚠ CẢNH BÁO NGUY HIỂM</div>
+                    <div class="sbadge bd" id="danger-score">THREAT: 5 / 5</div>
+                    <div class="rlist">
+                        <div><span class="lbl">//:Lý do:</span> <span id="danger-reason"></span></div>
+                        <div><span class="lbl">//:Khuyến cáo:</span> <span id="danger-recommend"></span></div>
+                        <div><span class="lbl">//:Phân loại:</span> <span id="danger-types"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="ftr">
+            <div class="ftr-l">
+                <div class="author"> Dự án thi của <span style="color:var(--accent);font-size:.7rem">SEPA Team</span></div>
+                <div class="school">THPT Nguyễn Khuyến Bà Rịa - Vũng Tàu · TP. Hồ Chí Minh</div>
+            </div>
+            <div class="ftr-r">
+                <div class="ftr-copy">© 2026 CYBER SHIELD</div>
+                <div class="ftr-soc">
+                    <!--<div class="fsoc"><i class="fab fa-facebook-f"></i></div>
+                    <div class="fsoc"><i class="fab fa-github"></i></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
