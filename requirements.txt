@@ -16,3 +16,5 @@ requests
 urllib3>=2.0.0.post1
 bytez
 uvicorn
+openpyxl
+pandas
