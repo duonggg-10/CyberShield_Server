@@ -13,15 +13,17 @@ from eventlet import wsgi
 from flask import Flask, jsonify, render_template, request, abort
 import re
 from flask_cors import CORS
-from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from werkzeug.middleware.proxy_fix import ProxyFix # Import ProxyFix
-from socketio import WSGIApp
+from flask_socketio import SocketIO
+from werkzeug.middleware.dispatcher import DispatcherMiddleware # Re-added
+from werkzeug.middleware.proxy_fix import ProxyFix
+import socketio as python_socketio
 
 from extensions import limiter
 
 # Import các ứng dụng con và các instance socketio của chúng
 from api.analyze import analyze_endpoint
 from api.admin import admin_endpoint
+from api.management import management_endpoint
 from api.utils import print_masked_api_keys # Import helper function
 
 GOOGLE_API_KEYS_STR = os.environ.get('GOOGLE_API_KEYS')
@@ -51,6 +53,9 @@ app.secret_key = os.environ.get('SECRET_KEY', 'default-secret-key-for-dev-only')
 if app.secret_key == 'default-secret-key-for-dev-only':
     logger.warning("Sử dụng SECRET_KEY mặc định. Hãy thay đổi nó trong môi trường production!")
 
+# --- Khởi tạo SocketIO ---
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+
 # Đăng ký blueprint cho ứng dụng gốc
 
 @app.before_request
@@ -68,7 +73,7 @@ def firewall():
     # 2. Các mẫu tấn công phổ biến
     attack_patterns = [
         r'\/wp-', r'\/xmlrpc', r'\/phpmyadmin', r'\/pma', r'\/admin\/', # Quét CMS/Admin
-        r'\.\.\/', r'\.\.\\', # Path Traversal
+        r'\.\.\/', r'\.\.', # Path Traversal
         r'etc\/passwd', r'proc\/self' # Linux system files
     ]
     
@@ -81,6 +86,7 @@ def firewall():
 
 app.register_blueprint(analyze_endpoint, url_prefix='/api')
 app.register_blueprint(admin_endpoint)
+app.register_blueprint(management_endpoint)
 
 @app.route('/')
 def home():
@@ -139,6 +145,5 @@ def internal_error(error):
 # --- Khởi chạy Server ---
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
-    logger.info(f"🚀 Starting CyberShield server on http://localhost:{port}")
-    # Sử dụng server của eventlet để chạy ứng dụng Flask chính
-    wsgi.server(eventlet.listen(('', port)), app)
+    logger.info(f"🚀 Starting CyberShield SOC-Enabled server on port {port}")
+    socketio.run(app, host='0.0.0.0', port=port, debug=False)
