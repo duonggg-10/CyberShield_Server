@@ -7,7 +7,7 @@ backlog = 2048
 
 # Worker processes
 workers = 3 # Raspberry Pi 5 has 4 cores, start with 3 workers for 4GB RAM
-worker_class = "uvicorn.workers.UvicornWorker" # Use Uvicorn worker for async app
+worker_class = "eventlet" # Use eventlet worker to match app.py monkey-patching
 worker_connections = 1000
 timeout = 60 # Increased timeout for potentially longer API calls
 keepalive = 2
