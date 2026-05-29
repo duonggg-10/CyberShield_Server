@@ -1,7 +1,13 @@
 # app.py
 # IMPORTANT: Monkey-patch for eventlet is crucial for WebSocket compatibility
 import eventlet
-eventlet.monkey_patch(dns=False)
+import socket
+
+# Save the original getaddrinfo to bypass eventlet's buggy DNS resolver on Cloud environments
+original_getaddrinfo = socket.getaddrinfo
+eventlet.monkey_patch()
+# Restore it
+socket.getaddrinfo = original_getaddrinfo
 
 import os
 import logging
