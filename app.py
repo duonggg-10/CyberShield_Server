@@ -1,7 +1,7 @@
 # app.py
 # IMPORTANT: Monkey-patch for eventlet is crucial for WebSocket compatibility
 import eventlet
-eventlet.monkey_patch()
+eventlet.monkey_patch(dns=False)
 
 import os
 import logging
